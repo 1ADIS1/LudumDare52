@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bv8cflqmurl6f"]
+
+[ext_resource type="PackedScene" uid="uid://plsrbhjy573o" path="res://art/Donut.fbx" id="1_iltj6"]
+
+[node name="Main" type="Node"]
+
+[node name="Donut" parent="." instance=ExtResource("1_iltj6")]
