@@ -9,12 +9,14 @@ height = 1.7
 [sub_resource type="BoxShape3D" id="BoxShape3D_r46y7"]
 size = Vector3(0.35385, 0.174959, 0.33895)
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("CameraPivot", "Camera")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("CameraPivot", "Camera", "rayCast3D")]
 script = ExtResource("1_qfw0b")
 MovementSpeed = 5.0
 MaxCameraRotationX = 1.5
+InteractionDistance = 1000.0
 CameraPivot = NodePath("CameraPivot")
 Camera = NodePath("CameraPivot/Camera3D")
+rayCast3D = NodePath("CameraPivot/RayCast3D")
 
 [node name="Body" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.861368, 0)
@@ -26,6 +28,10 @@ shape = SubResource("BoxShape3D_r46y7")
 
 [node name="CameraPivot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.36, 0)
+
+[node name="RayCast3D" type="RayCast3D" parent="CameraPivot"]
+exclude_parent = false
+target_position = Vector3(0, 0, -1.6)
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
 current = true

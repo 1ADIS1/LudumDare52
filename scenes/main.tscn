@@ -1,11 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://bv8cflqmurl6f"]
+[gd_scene load_steps=10 format=3 uid="uid://bv8cflqmurl6f"]
 
 [ext_resource type="PackedScene" uid="uid://plsrbhjy573o" path="res://art/Donut.fbx" id="1_iltj6"]
 [ext_resource type="PackedScene" uid="uid://xv12rdxqtyhe" path="res://scenes/Player.tscn" id="2_6gqav"]
 [ext_resource type="PackedScene" uid="uid://dh7q3p7l8kpju" path="res://scenes/entrance.tscn" id="3_ruivh"]
 [ext_resource type="PackedScene" uid="uid://cbr08a6sshtb" path="res://scenes/floor.tscn" id="4_jopef"]
 [ext_resource type="PackedScene" uid="uid://c8svm7aynmhn2" path="res://scenes/entrance_door.tscn" id="5_200qj"]
-[ext_resource type="Script" path="res://scripts/MeatController.cs" id="6_jaee6"]
+[ext_resource type="PackedScene" uid="uid://d0h4qs053l2hd" path="res://scenes/gathering_spot.tscn" id="6_rn8fj"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mhof5"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -19,8 +19,6 @@ background_mode = 2
 sky = SubResource("Sky_53rgl")
 tonemap_mode = 2
 glow_enabled = true
-
-[sub_resource type="BoxMesh" id="BoxMesh_kvgkd"]
 
 [node name="Main" type="Node"]
 
@@ -49,18 +47,5 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 2, 
 [node name="EntranceDoor" parent="." instance=ExtResource("5_200qj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.67947)
 
-[node name="GatheringSpot" type="Node3D" parent="."]
-
-[node name="Meat1" type="MeshInstance3D" parent="GatheringSpot" node_paths=PackedStringArray("CollectionTimer")]
-transform = Transform3D(0.0328072, 0, 0, 0, 0.0328072, 0, 0, 0, 0.0328072, 1.25248, 1.34981, -0.828897)
-mesh = SubResource("BoxMesh_kvgkd")
-script = ExtResource("6_jaee6")
-CollectionDuration = 3.6
-MinGrowDuration = 6
-MaxGrowDuration = 12
-MaxGrowthSize = Vector3(0.29, 0.29, 0.29)
-CollectionTimer = NodePath("CollectionTimer")
-
-[node name="CollectionTimer" type="Timer" parent="GatheringSpot/Meat1"]
-
-[connection signal="timeout" from="GatheringSpot/Meat1/CollectionTimer" to="GatheringSpot/Meat1" method="OnTimerTimeout"]
+[node name="GatheringSpot" parent="." instance=ExtResource("6_rn8fj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.13033, 1.25259, -1.28081)

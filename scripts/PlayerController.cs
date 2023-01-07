@@ -7,8 +7,10 @@ public partial class PlayerController : CharacterBody3D
     [Export] private float MouseSensitivity = 0.002f; // radians/pixel
     [Export] private float MaxCameraRotationX = 1.2f;
     [Export] private float FallAcceleration = 10f;
+    [Export] private float InteractionDistance;
     [Export] private Node3D CameraPivot;
     [Export] private Camera3D Camera;
+    [Export] private RayCast3D rayCast3D;
 
     private Vector3 _velocity;
 
@@ -40,6 +42,21 @@ public partial class PlayerController : CharacterBody3D
 
         Velocity = _velocity;
         MoveAndSlide();
+
+        HandleInteractions();
+    }
+
+    // Check for interaction with objects
+    private void HandleInteractions()
+    {
+        if (rayCast3D.IsColliding())
+        {
+            var collider = rayCast3D.GetCollider();
+            if (collider.HasMethod("Interact"))
+            {
+                collider.Call("Interact");
+            }
+        }
     }
 
     public override void _Input(InputEvent @event)

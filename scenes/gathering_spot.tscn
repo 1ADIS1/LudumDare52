@@ -1,0 +1,47 @@
+[gd_scene load_steps=5 format=3 uid="uid://d0h4qs053l2hd"]
+
+[ext_resource type="Script" path="res://scripts/MeatController.cs" id="1_yjr7p"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_kvgkd"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_m15w5"]
+size = Vector3(0.01, 0.01, 0.01)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_guof5"]
+size = Vector3(0.3, 0.3, 0.3)
+
+[node name="GatheringSpot" type="StaticBody3D" node_paths=PackedStringArray("CollectionTimer", "DestroyParticles", "Mesh")]
+script = ExtResource("1_yjr7p")
+CollectionDuration = 3.6
+MinGrowDuration = 6
+MaxGrowDuration = 12
+MaxGrowthSize = Vector3(0.29, 0.29, 0.29)
+CollectionTimer = NodePath("Mesh/CollectionTimer")
+DestroyParticles = NodePath("DestoryParticles")
+Mesh = NodePath("Mesh")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.0328072, 0, 0, 0, 0.0328072, 0, 0, 0, 0.0328072, 0, 0, 0)
+mesh = SubResource("BoxMesh_kvgkd")
+
+[node name="CollectionTimer" type="Timer" parent="Mesh"]
+
+[node name="DestoryParticles" type="CPUParticles3D" parent="."]
+emitting = false
+amount = 84
+one_shot = true
+explosiveness = 1.0
+randomness = 0.42
+lifetime_randomness = 0.37
+mesh = SubResource("BoxMesh_m15w5")
+emission_shape = 1
+emission_sphere_radius = 0.2
+spread = 180.0
+initial_velocity_min = 5.6
+initial_velocity_max = 9.57
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_guof5")
+
+[connection signal="mouse_entered" from="." to="." method="MouseEntered"]
+[connection signal="timeout" from="Mesh/CollectionTimer" to="." method="OnCollectionTimerTimeout"]

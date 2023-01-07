@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class MeatController : MeshInstance3D
+public partial class MeatController : StaticBody3D
 {
     [Export] private float CollectionDuration;
     [Export] private int MinGrowDuration;
@@ -9,6 +9,9 @@ public partial class MeatController : MeshInstance3D
     [Export] private Vector3 MaxGrowthSize;
     [Export] private Timer CollectionTimer;
     [Export] private CPUParticles3D DestroyParticles;
+    [Export] private MeshInstance3D Mesh;
+
+    public bool CanHarvest;
 
     public override void _Ready()
     {
@@ -20,8 +23,8 @@ public partial class MeatController : MeshInstance3D
     {
         Random random = new Random();
 
-        var scaleTweener = CreateTween();
-        scaleTweener.TweenProperty(this, "scale", MaxGrowthSize, random.Next(MinGrowDuration, MaxGrowDuration)).Finished += ()
+        var scaleTweener = Mesh.CreateTween();
+        scaleTweener.TweenProperty(Mesh, "scale", MaxGrowthSize, random.Next(MinGrowDuration, MaxGrowDuration)).Finished += ()
             =>
             {
                 GD.Print("Plant has grown!");
@@ -30,9 +33,14 @@ public partial class MeatController : MeshInstance3D
         scaleTweener.Play();
     }
 
-    public void OnTimerTimeout()
+    public void OnCollectionTimerTimeout()
     {
         GD.Print("Plant has exploded!");
         DestroyParticles.Emitting = true;
+    }
+
+    public void Interact()
+    {
+        GD.Print("Meat collected!");
     }
 }
