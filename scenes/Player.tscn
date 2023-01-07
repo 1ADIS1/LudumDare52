@@ -7,7 +7,7 @@ radius = 0.25
 height = 1.7
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_r46y7"]
-size = Vector3(0.431449, 0.174959, 0.523167)
+size = Vector3(0.35385, 0.174959, 0.33895)
 
 [node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("CameraPivot", "Camera")]
 script = ExtResource("1_qfw0b")
@@ -21,7 +21,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.861368, 0)
 shape = SubResource("CapsuleShape3D_ph365")
 
 [node name="Feet" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.177026, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.145134, 0)
 shape = SubResource("BoxShape3D_r46y7")
 
 [node name="CameraPivot" type="Node3D" parent="."]

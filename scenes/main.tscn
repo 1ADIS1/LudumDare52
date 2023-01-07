@@ -1,7 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://bv8cflqmurl6f"]
+[gd_scene load_steps=11 format=3 uid="uid://bv8cflqmurl6f"]
 
 [ext_resource type="PackedScene" uid="uid://plsrbhjy573o" path="res://art/Donut.fbx" id="1_iltj6"]
 [ext_resource type="PackedScene" uid="uid://xv12rdxqtyhe" path="res://scenes/Player.tscn" id="2_6gqav"]
+[ext_resource type="PackedScene" uid="uid://dh7q3p7l8kpju" path="res://scenes/entrance.tscn" id="3_ruivh"]
+[ext_resource type="PackedScene" uid="uid://cbr08a6sshtb" path="res://scenes/floor.tscn" id="4_jopef"]
+[ext_resource type="PackedScene" uid="uid://c8svm7aynmhn2" path="res://scenes/entrance_door.tscn" id="5_200qj"]
+[ext_resource type="Script" path="res://scripts/MeatController.cs" id="6_jaee6"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mhof5"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -16,10 +20,7 @@ sky = SubResource("Sky_53rgl")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ynvlp"]
-size = Vector3(9.604, 0.001, 10)
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_52jb3"]
+[sub_resource type="BoxMesh" id="BoxMesh_kvgkd"]
 
 [node name="Main" type="Node"]
 
@@ -31,18 +32,35 @@ shadow_enabled = true
 environment = SubResource("Environment_x8ui2")
 
 [node name="Donut" parent="." instance=ExtResource("1_iltj6")]
-transform = Transform3D(9.81322, 0, 0, 0, 4.71754, -9.46022, 0, 7.148, 6.24355, 0.0385654, 1.01461, -2.60382)
+transform = Transform3D(9.81322, 0, 0, 0, 4.71754, -9.46022, 0, 7.148, 6.24355, 3.64541, 1.05466, -2.33728)
 
 [node name="Player" parent="." instance=ExtResource("2_6gqav")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.16178, 0)
+MovementSpeed = 3.0
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="Entrance" parent="." instance=ExtResource("3_ruivh")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1.64508, 0, 0, 0, 1.64508, 0, 0, 0, 1.64508, 0, 0, 0)
-shape = SubResource("BoxShape3D_ynvlp")
+[node name="Floor" parent="." instance=ExtResource("4_jopef")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
 
-[node name="FloorMesh" type="MeshInstance3D" parent="StaticBody3D"]
-transform = Transform3D(7.95165, 0, 0, 0, 7.95165, 0, 0, 0, 7.95165, 0, 0, 0)
-mesh = SubResource("PlaneMesh_52jb3")
-skeleton = NodePath("../..")
+[node name="Floor2" parent="." instance=ExtResource("4_jopef")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 2, 2.49221)
+
+[node name="EntranceDoor" parent="." instance=ExtResource("5_200qj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.67947)
+
+[node name="GatheringSpot" type="Node3D" parent="."]
+
+[node name="Meat1" type="MeshInstance3D" parent="GatheringSpot" node_paths=PackedStringArray("CollectionTimer")]
+transform = Transform3D(0.0328072, 0, 0, 0, 0.0328072, 0, 0, 0, 0.0328072, 1.25248, 1.34981, -0.828897)
+mesh = SubResource("BoxMesh_kvgkd")
+script = ExtResource("6_jaee6")
+CollectionDuration = 3.6
+MinGrowDuration = 6
+MaxGrowDuration = 12
+MaxGrowthSize = Vector3(0.29, 0.29, 0.29)
+CollectionTimer = NodePath("CollectionTimer")
+
+[node name="CollectionTimer" type="Timer" parent="GatheringSpot/Meat1"]
+
+[connection signal="timeout" from="GatheringSpot/Meat1/CollectionTimer" to="GatheringSpot/Meat1" method="OnTimerTimeout"]

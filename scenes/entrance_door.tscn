@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8svm7aynmhn2"]
+
+[ext_resource type="PackedScene" uid="uid://bn381fauyc8sn" path="res://art/EntranceDoor.gltf" id="1_bn4ny"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sggbm"]
+
+[node name="EntranceDoor" type="StaticBody3D"]
+
+[node name="Mesh" parent="." instance=ExtResource("1_bn4ny")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_sggbm")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="OmniLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 1.64281, 0.103673)
+light_color = Color(1, 0.0901961, 0.133333, 1)
+light_energy = 16.0
+spot_range = 8.07098
+spot_angle = 79.1064
