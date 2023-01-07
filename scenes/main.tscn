@@ -1,7 +1,48 @@
-[gd_scene load_steps=2 format=3 uid="uid://bv8cflqmurl6f"]
+[gd_scene load_steps=8 format=3 uid="uid://bv8cflqmurl6f"]
 
 [ext_resource type="PackedScene" uid="uid://plsrbhjy573o" path="res://art/Donut.fbx" id="1_iltj6"]
+[ext_resource type="PackedScene" uid="uid://xv12rdxqtyhe" path="res://scenes/Player.tscn" id="2_6gqav"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mhof5"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_53rgl"]
+sky_material = SubResource("ProceduralSkyMaterial_mhof5")
+
+[sub_resource type="Environment" id="Environment_x8ui2"]
+background_mode = 2
+sky = SubResource("Sky_53rgl")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ynvlp"]
+size = Vector3(9.604, 0.001, 10)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_52jb3"]
 
 [node name="Main" type="Node"]
 
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_x8ui2")
+
 [node name="Donut" parent="." instance=ExtResource("1_iltj6")]
+transform = Transform3D(9.81322, 0, 0, 0, 4.71754, -9.46022, 0, 7.148, 6.24355, 0.0385654, 1.01461, -2.60382)
+
+[node name="Player" parent="." instance=ExtResource("2_6gqav")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.16178, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1.64508, 0, 0, 0, 1.64508, 0, 0, 0, 1.64508, 0, 0, 0)
+shape = SubResource("BoxShape3D_ynvlp")
+
+[node name="FloorMesh" type="MeshInstance3D" parent="StaticBody3D"]
+transform = Transform3D(7.95165, 0, 0, 0, 7.95165, 0, 0, 0, 7.95165, 0, 0, 0)
+mesh = SubResource("PlaneMesh_52jb3")
+skeleton = NodePath("../..")
