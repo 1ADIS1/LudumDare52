@@ -3,12 +3,16 @@ using System;
 
 public partial class EntranceDoor : StaticBody3D
 {
-    [Export] private AnimationPlayer animationPlayer;
+    [Export] public AnimationPlayer animationPlayer;
     [Export] private PlayerController player;
     [Export] private HarvestSystem harvestSystem;
     [Export] private Furnace furnace;
     [Export] private Timer meatProcessingTimer;
+    [Export] public Light3D light;
     public bool IsMeatProcessing = false;
+
+    [Signal]
+    public delegate void MeatProcessingEndedEventHandler();
 
     public void Interact()
     {
@@ -41,5 +45,7 @@ public partial class EntranceDoor : StaticBody3D
         GD.Print("All meat has burnt!");
         animationPlayer.Stop();
         furnace.meatLoaded = 0;
+        IsMeatProcessing = false;
+        EmitSignal("MeatProcessingEnded");
     }
 }
