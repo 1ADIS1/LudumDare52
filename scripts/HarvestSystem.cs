@@ -10,6 +10,7 @@ public partial class HarvestSystem : Node3D
     [Export] private PlayerController player;
     [Export] private ColorRect screenColor;
     [Export] private float ScreenColorFadeDuration;
+    [Export] int lives;
 
     public override void _Ready()
     {
@@ -59,6 +60,11 @@ public partial class HarvestSystem : Node3D
         explodedMeat++;
         TweenScreenColor();
         player.ShakeCamera();
+
+        if (explodedMeat >= lives)
+        {
+            GetTree().ReloadCurrentScene();
+        }
     }
 
     public void TweenScreenColor()

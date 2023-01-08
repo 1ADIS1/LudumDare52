@@ -8,6 +8,9 @@ public partial class TutorialPaper : StaticBody3D
 
     [Export] int[] furnaceMeatCapacities;
     [Export] EntranceDoor entranceDoor;
+    [Export] ProgressBar MeatLoad;
+    [Export] public CPUParticles3D furnaceParticles;
+
     List<ColorRect> papers;
 
     bool HadInteracted = false;
@@ -15,7 +18,9 @@ public partial class TutorialPaper : StaticBody3D
 
     public override void _Ready()
     {
-        papers = new List<ColorRect> { GetNode<ColorRect>("Paper1"), GetNode<ColorRect>("Paper2"), GetNode<ColorRect>("Paper3") };
+        var UINode = GetParent().GetNode("UI");
+        papers = new List<ColorRect> { UINode.GetNode<ColorRect>("Paper1"), UINode.GetNode<ColorRect>("Paper2"), UINode.GetNode<ColorRect>("Paper3") };
+        MeatLoad.Visible = false;
     }
 
     public void Interact()
@@ -32,7 +37,10 @@ public partial class TutorialPaper : StaticBody3D
 
             HadInteracted = true;
             entranceDoor.light.LightEnergy = 0;
-            entranceDoor.animationPlayer.Play("Ending");
+            MeatLoad.Visible = false;
+            entranceDoor.IsEnding = true;
+            furnaceParticles.QueueFree();
+
             return;
         }
 
@@ -49,10 +57,13 @@ public partial class TutorialPaper : StaticBody3D
         {
             harvestSystem.StartGathering();
             furnace.MeatCapacity = furnaceMeatCapacities[currentPhase];
-            GD.Print("New meat goal: ", furnace.MeatCapacity);
+
+            MeatLoad.Value = 0;
+            MeatLoad.MaxValue = furnace.MeatCapacity;
 
             papers[currentPhase].Visible = false;
             HadInteracted = true;
+            MeatLoad.Visible = true;
         }
     }
 

@@ -9,13 +9,24 @@ public partial class EntranceDoor : StaticBody3D
     [Export] private Furnace furnace;
     [Export] private Timer meatProcessingTimer;
     [Export] public Light3D light;
+    [Export] public ColorRect EndingScreen;
     public bool IsMeatProcessing = false;
+
+    public bool IsEnding = false;
 
     [Signal]
     public delegate void MeatProcessingEndedEventHandler();
 
     public void Interact()
     {
+        if (IsEnding == true)
+        {
+            animationPlayer.Play("Ending");
+            player.SetPhysicsProcess(false);
+            player.SetProcess(false);
+            return;
+        }
+
         if (IsMeatProcessing)
         {
             GD.Print("Meat is being processed...");

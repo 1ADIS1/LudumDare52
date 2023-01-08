@@ -5,6 +5,7 @@ public partial class Furnace : StaticBody3D
 {
     [Export] private PlayerController player;
     [Export] public int MeatCapacity;
+    [Export] ProgressBar MeatLoad;
 
     public int meatLoaded;
 
@@ -15,6 +16,7 @@ public partial class Furnace : StaticBody3D
             GD.Print("Meat was loaded!");
             player.meat.Visible = false;
             meatLoaded++;
+            MeatLoad.Value = meatLoaded;
         }
         else if (meatLoaded == MeatCapacity)
         {
