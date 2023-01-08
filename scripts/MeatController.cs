@@ -23,7 +23,6 @@ public partial class MeatController : StaticBody3D
 
     public override void _Ready()
     {
-        scaleTween = Mesh.CreateTween();
         startingSize = Mesh.Scale;
         CollectionTimer.WaitTime = CollectionDuration;
     }
@@ -32,6 +31,7 @@ public partial class MeatController : StaticBody3D
     {
         Random random = new Random();
 
+        scaleTween = Mesh.CreateTween();
         scaleTween.TweenProperty(Mesh, "scale", MaxGrowthSize, random.Next(MinGrowDuration, MaxGrowDuration));
         scaleTween.TweenCallback(new Callable(this, "MeatHasGrown"));
         scaleTween.Play();
@@ -49,7 +49,7 @@ public partial class MeatController : StaticBody3D
         DestroyParticles.Restart();
         DestroyParticles.Emitting = true;
 
-        RestartMeat();
+        RestartGrowth();
         EmitSignal(nameof(MeatDestroyed), this);
     }
 
@@ -60,16 +60,20 @@ public partial class MeatController : StaticBody3D
 
     public void Harvest()
     {
-        RestartMeat();
+        RestartGrowth();
     }
 
-    public void RestartMeat()
+    public void StopGrowth()
     {
         CollectionTimer.Stop();
         Mesh.Scale = startingSize;
         CanHarvest = false;
         scaleTween.Kill();
-        scaleTween = Mesh.CreateTween();
+    }
+
+    public void RestartGrowth()
+    {
+        StopGrowth();
         ProcessGrowth();
     }
 }

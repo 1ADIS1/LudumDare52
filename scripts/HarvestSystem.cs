@@ -20,8 +20,6 @@ public partial class HarvestSystem : Node3D
             // I know this is unsafe, but I have no time.
             gatheringSpots.Add(gatheringSpot);
         }
-
-        StartGathering();
     }
 
     public void StartGathering()
@@ -29,6 +27,14 @@ public partial class HarvestSystem : Node3D
         foreach (Node gatheringSpot in gatheringSpots)
         {
             gatheringSpot.Call("ProcessGrowth");
+        }
+    }
+
+    public void StopGathering()
+    {
+        foreach (Node gatheringSpot in gatheringSpots)
+        {
+            gatheringSpot.Call("StopGrowth");
         }
     }
 
