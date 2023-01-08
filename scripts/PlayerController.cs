@@ -11,11 +11,15 @@ public partial class PlayerController : CharacterBody3D
     [Export] private Node3D CameraPivot;
     [Export] private Camera3D Camera;
     [Export] private RayCast3D rayCast3D;
+    [Export] public MeshInstance3D meat;
+    [Export] private float CameraShakeAmount;
+    [Export] private float CameraShakeDuration;
 
     private Vector3 _velocity;
 
     public override void _Ready()
     {
+        meat.Visible = false;
         Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
@@ -52,7 +56,7 @@ public partial class PlayerController : CharacterBody3D
         if (rayCast3D.IsColliding())
         {
             var collider = rayCast3D.GetCollider();
-            if (collider.HasMethod("Interact"))
+            if (collider.HasMethod("Interact") && Input.IsActionJustPressed("interact"))
             {
                 collider.Call("Interact");
             }
@@ -68,5 +72,21 @@ public partial class PlayerController : CharacterBody3D
             CameraPivot.Rotation = CameraPivot.Rotation.Clamp(new Vector3(-MaxCameraRotationX, 0, 0),
                 new Vector3(MaxCameraRotationX, 0, 0));
         }
+    }
+
+    public void ShakeCamera()
+    {
+        var initOffset = new Vector2(Camera.HOffset, Camera.VOffset);
+        var cameraTween = CreateTween();
+
+        RandomNumberGenerator random = new RandomNumberGenerator();
+
+        cameraTween.SetParallel(true);
+        cameraTween.TweenProperty(Camera, "h_offset", random.RandfRange(-0.7f, 0.7f) * CameraShakeAmount, CameraShakeDuration);
+        cameraTween.TweenProperty(Camera, "v_offset", random.RandfRange(-0.7f, 0.7f) * CameraShakeAmount, CameraShakeDuration);
+        cameraTween.Chain().TweenProperty(Camera, "h_offset", 0, CameraShakeDuration);
+        cameraTween.TweenProperty(Camera, "v_offset", 0, CameraShakeDuration);
+
+        cameraTween.Play();
     }
 }

@@ -25,6 +25,7 @@ transform = Transform3D(0.0328072, 0, 0, 0, 0.0328072, 0, 0, 0, 0.0328072, 0, 0,
 mesh = SubResource("BoxMesh_kvgkd")
 
 [node name="CollectionTimer" type="Timer" parent="Mesh"]
+one_shot = true
 
 [node name="DestoryParticles" type="CPUParticles3D" parent="."]
 emitting = false
@@ -43,5 +44,4 @@ initial_velocity_max = 9.57
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_guof5")
 
-[connection signal="mouse_entered" from="." to="." method="MouseEntered"]
 [connection signal="timeout" from="Mesh/CollectionTimer" to="." method="OnCollectionTimerTimeout"]

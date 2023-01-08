@@ -11,36 +11,65 @@ public partial class MeatController : StaticBody3D
     [Export] private CPUParticles3D DestroyParticles;
     [Export] private MeshInstance3D Mesh;
 
-    public bool CanHarvest;
+    public bool CanHarvest = false;
+    public Tween scaleTween;
+    private Vector3 startingSize;
+
+    [Signal]
+    public delegate void InteractedEventHandler(MeatController meatController);
+
+    [Signal]
+    public delegate void MeatDestroyedEventHandler(MeatController meatController);
 
     public override void _Ready()
     {
+        scaleTween = Mesh.CreateTween();
+        startingSize = Mesh.Scale;
         CollectionTimer.WaitTime = CollectionDuration;
-        ProcessGrowth();
     }
 
     public void ProcessGrowth()
     {
         Random random = new Random();
 
-        var scaleTweener = Mesh.CreateTween();
-        scaleTweener.TweenProperty(Mesh, "scale", MaxGrowthSize, random.Next(MinGrowDuration, MaxGrowDuration)).Finished += ()
-            =>
-            {
-                GD.Print("Plant has grown!");
-                CollectionTimer.Start();
-            };
-        scaleTweener.Play();
+        scaleTween.TweenProperty(Mesh, "scale", MaxGrowthSize, random.Next(MinGrowDuration, MaxGrowDuration));
+        scaleTween.TweenCallback(new Callable(this, "MeatHasGrown"));
+        scaleTween.Play();
+    }
+
+    public void MeatHasGrown()
+    {
+        GD.Print("Plant has grown!");
+        CanHarvest = true;
+        CollectionTimer.Start();
     }
 
     public void OnCollectionTimerTimeout()
     {
-        GD.Print("Plant has exploded!");
+        DestroyParticles.Restart();
         DestroyParticles.Emitting = true;
+
+        RestartMeat();
+        EmitSignal(nameof(MeatDestroyed), this);
     }
 
     public void Interact()
     {
-        GD.Print("Meat collected!");
+        EmitSignal("Interacted", this);
+    }
+
+    public void Harvest()
+    {
+        RestartMeat();
+    }
+
+    public void RestartMeat()
+    {
+        CollectionTimer.Stop();
+        Mesh.Scale = startingSize;
+        CanHarvest = false;
+        scaleTween.Kill();
+        scaleTween = Mesh.CreateTween();
+        ProcessGrowth();
     }
 }
